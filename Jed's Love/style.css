@@ -1,0 +1,526 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #fcedf0, #ffc4d0);
+    font-family: 'Outfit', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* -- Envelope Components -- */
+.envelope-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+    transition: all 1s ease-in-out;
+}
+
+.envelope-container.fade-out {
+    opacity: 0;
+    transform: translateY(60px) scale(0.9);
+    pointer-events: none;
+}
+
+/* The physical envelope */
+.envelope {
+    position: relative;
+    width: 320px;
+    height: 200px;
+    background: #ffb3c6; /* inside color */
+    cursor: pointer;
+    box-shadow: 0 15px 40px rgba(255, 77, 109, 0.2);
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.envelope:hover {
+    transform: translateY(-5px);
+}
+
+.envelope.open {
+    cursor: default;
+}
+
+.envelope.open:hover {
+    transform: none;
+}
+
+/* The bottom instruction text */
+.instruction {
+    margin-top: 50px;
+    color: #c9184a;
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    animation: pulse 2s infinite;
+    transition: opacity 0.3s;
+}
+
+.envelope.open ~ .instruction {
+    opacity: 0;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+/* Flap at top */
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    /* Create a downward pointing triangle */
+    border-left: 160px solid transparent; /* half width */
+    border-right: 160px solid transparent; /* half width */
+    border-top: 120px solid #ff4d6d; /* solid flap color */
+    z-index: 4;
+    transform-origin: top;
+    transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Flap Opens up */
+.envelope.open .flap {
+    transform: rotateX(180deg);
+    z-index: 1; /* Drop behind the card once opened */
+}
+
+/* Envelope Front (Left/Right/Bottom triangles) */
+.envelope-front-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 320px;
+    height: 200px;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: 0 0 8px 8px;
+}
+
+/* The actual folded sections */
+.envelope-front {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 160px solid #ff758f;
+    border-right: 160px solid #ff758f;
+    border-bottom: 120px solid #ff8fa3;
+    border-top: 100px solid transparent;
+}
+
+
+/* -- Card inside -- */
+.card {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 280px;
+    height: 160px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    z-index: 2; /* Sandwiched between back and front/flap */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
+}
+
+/* The card pops out */
+.envelope.open .card {
+    transform: translateY(-110px);
+    z-index: 5; /* Pop to front over front-wrap so buttons are clickable */
+}
+
+.question {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.6s;
+}
+
+.envelope.open .buttons {
+    opacity: 1;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    background: #ff4d6d;
+    color: white;
+    border-radius: 25px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255, 77, 109, 0.3);
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+    background: #c9184a;
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 6px 15px rgba(201, 24, 74, 0.4);
+}
+
+
+/* -- Final Message Container -- */
+.message-container {
+    position: absolute;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease 0.8s, transform 1s ease 0.8s;
+    transform: translateY(20px);
+    max-width: 650px;
+    width: 90%;
+}
+
+.message-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.paper {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 60px 50px;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(201, 24, 74, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.paper p {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.2rem;
+    color: #590d22;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.paper .signature {
+    margin-top: 40px;
+    margin-bottom: 0;
+    text-align: right;
+    font-weight: 700;
+    color: #a01a58;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .envelope {
+        width: 300px;
+        height: 180px;
+    }
+    .flap {
+        border-left: 150px solid transparent;
+        border-right: 150px solid transparent;
+        border-top: 110px solid #ff4d6d;
+    }
+    .envelope-front-wrap {
+        width: 300px;
+        height: 180px;
+    }
+    .envelope-front {
+        border-left: 150px solid #ff758f;
+        border-right: 150px solid #ff758f;
+        border-bottom: 110px solid #ff8fa3;
+    }
+    .card {
+        width: 260px;
+        height: 150px;
+    }
+    .envelope.open .card {
+        transform: translateY(-90px);
+    }
+    .paper {
+        padding: 40px 30px;
+    }
+    .paper p {
+        font-size: 1.8rem;
+    }
+}
+
+/* -- Pages Base -- */
+.page {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 30;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.page.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* -- Page 1: Date -- */
+.page-date {
+    background: repeating-linear-gradient(
+        to right,
+        #fff,
+        #fff 40px,
+        #ffc4d0 40px,
+        #ffc4d0 80px
+    );
+}
+
+.date-content {
+    background: #fffdfd;
+    width: 80%;
+    max-width: 800px;
+    height: 85%;
+    max-height: 700px;
+    position: relative;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+}
+
+/* Add the simulated ribbon lines inside */
+.date-content::before {
+    content: '';
+    position: absolute;
+    top: 20px; bottom: 20px; left: 20px; right: 20px;
+    border: 4px solid #e08ea2;
+    border-radius: 15px;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.date-bow {
+    position: absolute;
+    top: -50px;
+    width: 200px;
+    z-index: 5;
+}
+
+.date-frame {
+    margin-top: 70px;
+    text-align: center;
+}
+
+.date-pretext {
+    font-size: 1.5rem;
+    color: #590d22;
+    margin-bottom: 10px;
+}
+
+.date-title {
+    font-size: 3rem;
+    color: #590d22;
+    font-weight: 700;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+}
+
+.date-details {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-bottom: 30px;
+}
+
+.detail-box {
+    border-top: 1px solid #c9184a;
+    padding-top: 10px;
+    min-width: 120px;
+}
+
+.detail-label {
+    font-size: 1.4rem;
+    color: #590d22;
+    font-weight: 600;
+}
+
+/* Polaroid */
+.polaroid {
+    position: relative;
+    background: #fff;
+    padding: 15px 15px 40px 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    width: 260px;
+    transform: rotate(3deg);
+    margin-top: 10px;
+    z-index: 10;
+}
+
+.polaroid-inner {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #f0f0f0;
+    overflow: hidden;
+}
+
+.paperclip {
+    position: absolute;
+    top: -15px;
+    right: 20px;
+    width: 20px;
+    height: 50px;
+    border: 3px solid #999;
+    border-radius: 15px;
+    /* Create an opening clip effect */
+    border-bottom: none;
+    z-index: 5;
+    background: transparent;
+    transform: rotate(15deg);
+}
+
+/* -- Page 2: Flowers -- */
+.page-flowers {
+    background: #d85c7b;
+    align-items: center;
+}
+
+.flowers-content {
+    display: flex;
+    max-width: 900px;
+    width: 90%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.scalloped-card {
+    background: #fffdfd;
+    padding: 60px 50px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    /* Dotted edge */
+    border: 15px solid transparent;
+    background-clip: padding-box;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+    width: 450px;
+}
+
+/* Scalloped edge */
+.scalloped-card::before {
+    content: '';
+    position: absolute;
+    top: -15px; bottom: -15px; left: -15px; right: -15px;
+    background-image: radial-gradient(circle at 10px 10px, transparent 10px, #fffdfd 11px);
+    background-size: 20px 20px;
+    background-position: -10px -10px;
+    z-index: -1;
+    border-radius: 10px;
+}
+
+/* Inner border */
+.scalloped-card::after {
+    content: '';
+    position: absolute;
+    top: 5px; bottom: 5px; left: 5px; right: 5px;
+    border: 2px dashed #b84c68;
+    pointer-events: none;
+    border-radius: 5px;
+}
+
+.flowers-title {
+    font-size: 2.2rem;
+    color: #590d22;
+    margin-bottom: 30px;
+    line-height: 1.4;
+    letter-spacing: 1px;
+}
+
+.flowers-subtitle {
+    font-size: 1.2rem;
+    color: #590d22;
+    font-family: inherit;
+    font-weight: 600;
+}
+
+.flowers-image-wrapper {
+    text-align: center;
+}
+
+.flowers-extra {
+    color: white;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.flowers-bouquet {
+    max-width: 400px;
+    transform: rotate(5deg);
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.2));
+}
+
+@media (max-width: 900px) {
+    .flowers-content {
+        flex-direction: column;
+        gap: 50px;
+        margin-top: 40px;
+    }
+    .flowers-bouquet {
+        max-width: 300px;
+    }
+    .scalloped-card {
+        width: 100%;
+        max-width: 350px;
+        padding: 40px 30px;
+    }
+    .flowers-title {
+        font-size: 1.8rem;
+    }
+    .date-title {
+        font-size: 2.2rem;
+    }
+    .polaroid {
+        width: 220px;
+    }
+    .date-details {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .date-content {
+        padding: 30px 20px;
+    }
+}

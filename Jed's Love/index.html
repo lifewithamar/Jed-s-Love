@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Pokuaa</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Outfit:wght@300;400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container" id="container">
+
+        <!-- Interactive Envelope -->
+        <div class="envelope-container" id="envelope-container">
+            <div class="envelope" id="envelope">
+
+                <!-- The Card inside the envelope -->
+                <div class="card" id="card">
+                    <h2 class="question">Do you want to go out with me?</h2>
+                    <div class="buttons">
+                        <button class="btn" id="btn-yes">Yes</button>
+                        <button class="btn" id="btn-absolutely">Absolutely</button>
+                    </div>
+                </div>
+
+                <div class="flap"></div>
+                <div class="envelope-front-wrap">
+                    <div class="envelope-front"></div>
+                </div>
+            </div>
+            <p class="instruction" id="instruction">Click the envelope</p>
+        </div>
+
+        <!-- The Final Message -->
+        <div class="message-container" id="message-container">
+            <div class="paper">
+                <p>Heyy Pokuaa,</p>
+                <p>I just wanted to say I’m really looking forward to tonight.<br>Not just because it’s a date… but
+                    because it’s with you.</p>
+                <p>I’ve been thinking about it more than I probably should<br>
+                    And I genuinely can’t wait to spend that time together.</p>
+                <p>I hope it’s something we both remember,<br>
+                    something easy, fun and just us being us.</p>
+                <p>So yeah… I’m excited.</p>
+                <p class="signature">See you soon ❤️</p>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-continue" id="btn-continue-to-date">Continue ➔</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 1: Date Details -->
+        <div class="page page-date hidden" id="page-date">
+            <div class="date-content">
+                <img src="images/bow.png" alt="Pink Ribbon Bow" class="date-bow">
+                <div class="date-frame">
+                    <p class="date-pretext">Join me for a</p>
+                    <h1 class="date-title">Date Night
+                    </h1>
+                    <div class="date-details">
+                        <div class="detail-box">
+                            <span class="detail-label">17/04/2026</span>
+                        </div>
+                        <div class="detail-box">
+                            <span class="detail-label">Olives Restaurant</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="polaroid">
+                    <div class="polaroid-inner">
+                        <img src="images/polaroid.JPG" alt="" class="polaroid-img"
+                            style="background: #e8e8e8; width: 100%; height: 100%; object-fit: cover; display: block;">
+                    </div>
+                    <div class="paperclip"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 50px; position: relative; z-index: 100;">
+                    <button class="btn btn-continue" id="btn-continue-to-flowers">Next ➔</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: Flowers -->
+        <div class="page page-flowers hidden" id="page-flowers">
+            <div class="flowers-content">
+                <div class="scalloped-card">
+                    <h2 class="flowers-title">YOUR PRESENCE IS<br>MY HONOR!</h2>
+                    <p class="flowers-subtitle">LOOKING FORWARD<br>TO SEE YOU !</p>
+                </div>
+                <div class="flowers-image-wrapper">
+                    <p class="flowers-extra">HERE'S A BOUQUET<br>FOR YOU !</p>
+                    <img src="images/bouquet.png" alt="Pink Tulips Bouquet" class="flowers-bouquet">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
